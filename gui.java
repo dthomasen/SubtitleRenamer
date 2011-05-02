@@ -1,10 +1,13 @@
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 
 public class gui implements ActionListener {
@@ -17,6 +20,9 @@ public class gui implements ActionListener {
 	private JButton movOpen;
 	
 	private JFileChooser fileChooser;
+	
+	private JList subList;
+	private JList movList;
 	
 	/**One array to store selected subtitle Files
 	 * And another one to store selected movie Files
@@ -33,6 +39,10 @@ public class gui implements ActionListener {
 		subOpen = new JButton("Choose Subtitle(s)");
 		movOpen = new JButton("Choose Movie(s)");
 		
+		subList = new JList();
+		movList = new JList();
+		
+		
 		/** Only necessary to use 1 fileChooser for both sub and mov dialogs
 		 *  Setting the fileChooser parameter to allow multiple file selection
 		 */
@@ -45,7 +55,9 @@ public class gui implements ActionListener {
 		
 		/** Creating one panel for subtitle options and one for movie options */ 
 		subtitle.add(subOpen);
+		subtitle.add(subList);
 		movie.add(movOpen);
+		movie.add(movList);
 		
 		/** Created a frameHelper because only 1 component could be assigned to ContentPane */
 		frameHelper.add(subtitle);
@@ -55,8 +67,7 @@ public class gui implements ActionListener {
 		/** Close program on exit */
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
-		/** Fixed size of 500, 530 */
-		frame.setSize(500, 350);
+		frame.pack();
 	}
 
 	/** Method for handling actionEvents from buttons */
@@ -64,10 +75,14 @@ public class gui implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == subOpen){
 				subFiles = fileChooserMethod();
+				subList.setListData(subFiles);
+				frame.pack();
 			}
 			
 			if(e.getSource() == movOpen){
 				movFiles = fileChooserMethod();
+				movList.setListData(movFiles);
+				frame.pack();
 			}
 	}
 	
