@@ -57,9 +57,10 @@ public class gui implements ActionListener {
 		/** Creating 2 filters, to filter subtitle and movie files accordingly */
 		subFilter = new FileNameExtensionFilter("Subtitle filter", "srt");
 		movFilter = new FileNameExtensionFilter("Movie filter", "mkv", "avi", "divx");
-		/** Adding action listeners for the 2 fileChooser buttons */
+		/** Adding action listeners for the 3 buttons */
 		subOpen.addActionListener(this);
 		movOpen.addActionListener(this);
+		goButton.addActionListener(this);
 		
 		/** Creating one panel for subtitle options and one for movie options */
 		subtitle.setLayout(new GridLayout(2, 1));
@@ -99,6 +100,10 @@ public class gui implements ActionListener {
 				movList.setListData(movFiles);
 				frame.pack();
 			}
+			
+			if(e.getSource() == goButton){
+				renameProcedure();
+			}
 	}
 	
 	/**
@@ -113,5 +118,47 @@ public class gui implements ActionListener {
 		}else{
 		return null;
 		}
+	}
+	
+	/**
+	 * Renames the subtitle files to the mov fileName but keeping the original file extension
+	 */
+	private void renameProcedure(){
+		
+		for(int i = 0; i <= movFiles.length - 1; i++){
+			subFiles[i].renameTo(new File(getFilenameWithoutExtension(movFiles[i]) + getFileExtension(subFiles[i])));
+		}
+	}
+	
+	/** 
+	 * Method to get the filename of a file, without the extension
+	 * @param f - the file to get the name from
+	 * @return String with the name
+	 */
+	private String getFilenameWithoutExtension(File f){
+		int index = f.getPath().lastIndexOf(".");
+		
+		String name = "";
+	
+		 if (index > 0 && index <= f.getPath().length() - 2 ) {
+			 name = f.getPath().substring(0, index);
+		 }  
+		 return name;
+	}
+	
+	/**
+	 * Method to get the file extension only
+	 * @param f - the file to get the extension from
+	 * @return the extension as a string
+	 */
+	private String getFileExtension(File f){
+		int index = f.getName().lastIndexOf(".");
+		
+		String extension = "";
+		
+		if(index > 0 && index <= f.getName().length() - 1){
+			extension = f.getName().substring(index);
+		}
+		return extension;
 	}
 }
