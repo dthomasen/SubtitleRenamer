@@ -1,3 +1,4 @@
+import java.awt.GridLayout;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class gui implements ActionListener {
 	
@@ -18,8 +20,11 @@ public class gui implements ActionListener {
 	private JPanel movie;
 	private JButton subOpen;
 	private JButton movOpen;
+	private JButton goButton;
 	
 	private JFileChooser fileChooser;
+	FileNameExtensionFilter subFilter;
+	FileNameExtensionFilter movFilter;
 	
 	private JList subList;
 	private JList movList;
@@ -38,6 +43,7 @@ public class gui implements ActionListener {
 		movie = new JPanel();
 		subOpen = new JButton("Choose Subtitle(s)");
 		movOpen = new JButton("Choose Movie(s)");
+		goButton = new JButton("GO!");
 		
 		subList = new JList();
 		movList = new JList();
@@ -48,12 +54,16 @@ public class gui implements ActionListener {
 		 */
 		fileChooser = new JFileChooser();
 		fileChooser.setMultiSelectionEnabled(true);
-		
+		/** Creating 2 filters, to filter subtitle and movie files accordingly */
+		subFilter = new FileNameExtensionFilter("Subtitle filter", "srt");
+		movFilter = new FileNameExtensionFilter("Movie filter", "mkv", "avi", "divx");
 		/** Adding action listeners for the 2 fileChooser buttons */
 		subOpen.addActionListener(this);
 		movOpen.addActionListener(this);
 		
-		/** Creating one panel for subtitle options and one for movie options */ 
+		/** Creating one panel for subtitle options and one for movie options */
+		subtitle.setLayout(new GridLayout(2, 1));
+		movie.setLayout(new GridLayout(2,1));
 		subtitle.add(subOpen);
 		subtitle.add(subList);
 		movie.add(movOpen);
@@ -61,6 +71,7 @@ public class gui implements ActionListener {
 		
 		/** Created a frameHelper because only 1 component could be assigned to ContentPane */
 		frameHelper.add(subtitle);
+		frameHelper.add(goButton);
 		frameHelper.add(movie);
 		frame.getContentPane().add(frameHelper);
 		
@@ -74,12 +85,16 @@ public class gui implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == subOpen){
+				//Assigning the sub filter to the fileChooser
+				fileChooser.addChoosableFileFilter(subFilter);
 				subFiles = fileChooserMethod();
 				subList.setListData(subFiles);
 				frame.pack();
 			}
 			
 			if(e.getSource() == movOpen){
+				//Assigning the mov filter to the fileChooser
+				fileChooser.addChoosableFileFilter(movFilter);
 				movFiles = fileChooserMethod();
 				movList.setListData(movFiles);
 				frame.pack();
