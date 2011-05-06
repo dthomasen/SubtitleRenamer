@@ -1,2 +1,15 @@
 Java program to rename a bunch of subtitles to match the equivalent movie file
-*Still early beta** 
+
+*Changelog*
+
+1 May 2011:
+Inital release - Just GUI, no functionality
+
+3 May 2011:
+V. 0.1 - Functionality, stability issues
+
+5 May 2011:
+V. 0.2 - Speed Improvements, GUI improvements
+
+6. May 2011:
+V. 1.0 Alpha - Stability fixes - Top bar menu added - About me etc.
