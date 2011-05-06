@@ -1,14 +1,20 @@
 import java.awt.GridLayout;
 import java.awt.List;
+import java.awt.Menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -25,6 +31,11 @@ public class SubtitleRenamer implements ActionListener {
 	private JButton subOpen;
 	private JButton movOpen;
 	private JButton goButton;
+	private JMenuItem openSubtitle;
+	private JMenuItem aboutItem;
+	private JMenuItem openMovie;
+	private JMenuItem renamerHelp;
+	private JMenuItem exit;
 	
 	private JFileChooser fileChooser;
 	FileNameExtensionFilter subFilter;
@@ -41,7 +52,7 @@ public class SubtitleRenamer implements ActionListener {
 	private File[] movFiles;
 	
 	public SubtitleRenamer(){
-		frame = new JFrame("Subtitle Renamer - v0.1");
+		frame = new JFrame("Subtitle Renamer - v1.0 alpha");
 		frameHelper = new JPanel();
 		subtitle = new JPanel();
 		movie = new JPanel();
@@ -52,6 +63,28 @@ public class SubtitleRenamer implements ActionListener {
 		subList = new JList();
 		movList = new JList();
 		
+		/** Creating the top menu bar */
+		JMenuBar menuBar = new JMenuBar();
+		JMenu filesMenu = new JMenu("Files");
+		JMenu helpMenu = new JMenu("Help");
+		
+		menuBar.add(filesMenu);
+		menuBar.add(helpMenu);
+		openSubtitle = new JMenuItem("Open Subtitle(s)");
+		openMovie = new JMenuItem("Open Movie(s)");
+		aboutItem = new JMenuItem("About");
+		renamerHelp = new JMenuItem("Renamer Help");
+		exit = new JMenuItem("Exit");
+		openSubtitle.addActionListener(this);
+		openMovie.addActionListener(this);
+		aboutItem.addActionListener(this);
+		renamerHelp.addActionListener(this);
+		exit.addActionListener(this);
+		filesMenu.add(openSubtitle);
+		filesMenu.add(openMovie);
+		filesMenu.add(exit);
+		helpMenu.add(aboutItem);
+		helpMenu.add(renamerHelp);
 		
 		/** Only necessary to use 1 fileChooser for both sub and mov dialogs
 		 *  Setting the fileChooser parameter to allow multiple file selection
@@ -79,7 +112,8 @@ public class SubtitleRenamer implements ActionListener {
 		frameHelper.add(goButton);
 		frameHelper.add(movie);
 		frame.getContentPane().add(frameHelper);
-		
+		frame.setJMenuBar(menuBar);
+				
 		/** Close program on exit */
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
@@ -89,7 +123,7 @@ public class SubtitleRenamer implements ActionListener {
 	/** Method for handling actionEvents from buttons */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == subOpen){
+			if(e.getSource() == subOpen || e.getSource() == openSubtitle){
 				//Assigning the sub filter to the fileChooser
 				fileChooser.addChoosableFileFilter(subFilter);
 				subFiles = fileChooserMethod();
@@ -97,7 +131,7 @@ public class SubtitleRenamer implements ActionListener {
 				frame.pack();
 			}
 			
-			if(e.getSource() == movOpen){
+			if(e.getSource() == movOpen || e.getSource() == openMovie){
 				//Assigning the mov filter to the fileChooser
 				fileChooser.addChoosableFileFilter(movFilter);
 				movFiles = fileChooserMethod();
@@ -108,6 +142,25 @@ public class SubtitleRenamer implements ActionListener {
 			if(e.getSource() == goButton){
 				renameProcedure();
 			}
+			
+			if(e.getSource() == aboutItem){
+				JOptionPane.showMessageDialog(frame,
+					    "Dennis Thomasen - 20 year old \nComputer science student at the University of Aarhus\nEmail: dennisthomasen@gmail.com",
+					    "About me",
+					    JOptionPane.INFORMATION_MESSAGE,
+					    new ImageIcon("aboutme.png"));
+				}
+			
+			if(e.getSource() == renamerHelp){
+				JOptionPane.showMessageDialog(frame,
+					    "Select subtitles to be renamed and the equivalent movie file.\nMy program will then rename the subtitles so that i.e. \nVLC will automatically play them along with the movie", 
+					    "Subtitle Renamer Help", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			if(e.getSource() == exit){
+				frame.dispose();
+			}
+			
 	}
 	
 	/**
@@ -120,7 +173,7 @@ public class SubtitleRenamer implements ActionListener {
 		if(returnVal == fileChooser.APPROVE_OPTION){
 			return fileChooser.getSelectedFiles();
 		}else{
-		return null;
+			return null;
 		}
 	}
 	
